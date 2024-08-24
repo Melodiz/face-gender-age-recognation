@@ -1,61 +1,66 @@
+import os 
 import sys
-import os
-
-# Add the directory containing data_loader.py to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-import tensorflow as tf
-from data_loader import load_data, create_generators, custom_generator, dataset_from_generator
-from model import AgeGenderModel
-from utils.plotting import plot_statistics
+from logger import setup_logger
 from tensorflow.keras.callbacks import TensorBoard
-import datetime
+from utils.plotting import plot_statistics
+from model import AgeGenderModel
+from utils.util import save_model
+from utils.config_loader import load_config
+from utils.tf_config_loader import configure_tensorflow
+from data_loader.data_preparation import prepare_data
+from utils.device_manager import get_device
+import tensorflow as tf
 
 def main():
-    df = load_data()
-    train_df = df.sample(frac=1, random_state=0).sample(frac=0.8, random_state=0)
-    test_df = df.drop(train_df.index)
+    # Load configuration
+    config = load_config()
 
-    train_generator, test_generator = create_generators(train_df, test_df)
+    # Configure TensorFlow
+    configure_tensorflow(config["cpu_threads"], config["gpu_threads"])
 
-    output_signature = (
-        tf.TensorSpec(shape=(None, 200, 200, 3), dtype=tf.float32),
-        (
-            tf.TensorSpec(shape=(None,), dtype=tf.float32),
-            tf.TensorSpec(shape=(None, 1), dtype=tf.float32)
-        )
-    )
+    logger, log_dir = setup_logger()
 
-    train_dataset = dataset_from_generator(lambda: custom_generator(train_generator), output_signature)
-    test_dataset = dataset_from_generator(lambda: custom_generator(test_generator), output_signature)
+    logger.info("Loading and preparing data...")
+    train_df, test_df, train_dataset, test_dataset = prepare_data()
 
+    logger.info("Initializing model...")
     model = AgeGenderModel()
-    model.model.summary()
+    model.model.summary(print_fn=logger.info)
 
+    logger.info("Compiling model...")
     model.compile_model(
-        optimizer='adamW',
-        loss={'age': 'mse', 'gender': 'binary_crossentropy'},
-        metrics={'age': 'mse', 'gender': 'accuracy'}
+        optimizer=config["optimizer"],
+        loss=config["loss"],
+        metrics=config["metrics"]
     )
 
-    batch_size = 32
-    train_steps = len(train_df) // batch_size
-    test_steps = len(test_df) // batch_size
+    train_steps = len(train_df) // config["batch_size"]
+    test_steps = len(test_df) // config["batch_size"]
+    print('Train steps: {}, Test steps: {}'.format(train_steps, test_steps))
 
-    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = TensorBoard(log_dir=log_dir, histogram_freq=1)
 
-    history = model.train_model(
-        train_dataset,
-        validation_data=test_dataset,
-        epochs=10,
-        batch_size=batch_size,
-        callbacks=[tensorboard_callback]
-    )
+    device = get_device()
 
+    with tf.device(device):
+        logger.info("Starting model training...")
+        history = model.train_model(
+            train_dataset,
+            validation_data=test_dataset,
+            epochs=config["epochs"],
+            batch_size=config["batch_size"],
+            callbacks=[tensorboard_callback]
+        )
+
+    logger.info("Plotting training statistics...")
     plot_statistics(history)
 
-    model.save_model('age_gender_model.h5')
+    save_model(model, logger)
+
+    logger.info("Training process completed.")
+
 
 if __name__ == "__main__":
     main()

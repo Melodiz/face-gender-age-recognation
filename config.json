@@ -1,0 +1,15 @@
+{
+  "optimizer": "adamW",
+  "loss": {
+    "age": "mse",
+    "gender": "binary_crossentropy"
+  },
+  "metrics": {
+    "age": "mse",
+    "gender": "accuracy"
+  },
+  "batch_size": 32,
+  "epochs": 5,
+  "cpu_threads": -1,
+  "gpu_threads": -1
+}
