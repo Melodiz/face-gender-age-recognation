@@ -1,1 +1,1 @@
-from .model import *
+from .VGG_model import *
