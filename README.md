@@ -29,7 +29,8 @@ AgeDB contains 16,488 images of various famous people, such as actors/actresses,
 The IMDB-WIKI dataset is one of the largest publicly available datasets of face images with age and gender labels. It contains more than 500,000 images. This dataset is primarily used for pre-training models rather than for final evaluation.
 
 - **Links to IMDB-WIKI**:
-  - [IMDB-WIKI Dataset](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
+  - [Source](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
+  - [Kaggle](https://www.kaggle.com/datasets/abhikjha/imdb-wiki-faces-dataset)
 
 To use this dataset, download `imdb_crop.tar` and `wiki_crop.tar`, and place them in `./data/imdb_crop` and `./data/wiki_crop`, respectively.
 
@@ -38,7 +39,7 @@ To use this dataset, download `imdb_crop.tar` and `wiki_crop.tar`, and place the
 The Adience dataset contains 26,580 photos across 2,284 subjects with a binary gender label and one label from eight different age groups, partitioned into five splits. It is used as a benchmark. You can find the state-of-the-art models [here](https://paperswithcode.com/sota/age-and-gender-classification-on-adience-age) for age and [here](https://paperswithcode.com/sota/age-and-gender-classification-on-adience) for gender, respectively.
 
 - **Links to Adience**:
-  - [Adience Dataset](https://paperswithcode.com/dataset/adience)
+  - [Papers with code](https://paperswithcode.com/dataset/adience)
   - [Kaggle](https://www.kaggle.com/datasets/ttungl/adience-benchmark-gender-and-age-classification)
 
 ## Data Pre-processing
@@ -105,4 +106,8 @@ The model is compiled with the following configurations:
 - **Links to ResNet50**:
   - [keras](https://keras.io/api/applications/resnet/)
   - [Papers with Code](https://paperswithcode.com/method/resnet)
+
+## Evaluation results
+
+[Click](training_results/TRAINIG-RESULTS.md) to see the detailed results.
 
