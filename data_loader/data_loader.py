@@ -11,8 +11,8 @@ def load_data(folder_path='data/', extra_size=False):
     else: 
         UTK_df = load_UTKFace_data()
         AgeDB_df = load_AgeDB_data()
-        WIKI_df = load_WIKI_data()
-        IMDB_df = load_IMDB_data()
+        WIKI_df = load_and_convert_WIKI_data()
+        IMDB_df = load_and_convert_IMDB_data()
         return pd.concat([UTK_df, AgeDB_df, WIKI_df, IMDB_df], ignore_index=True)
 
 def load_UTKFace_data(folder_path='data/UTKFace'):
@@ -41,11 +41,11 @@ def load_AgeDB_data(folder_path='data/AgeDB'):
     df = pd.DataFrame({'age': age, 'gender': gender, 'img': img_path})
     return df
 
-def load_WIKI_data(folder_path='data/WIKI'):
-    mat = scipy.io.loadmat(os.path.join(folder_path, 'wiki.mat'))
+def load_and_convert_WIKI_data(folder_path='../data/WIKI'):
+    meta_file = os.path.join(folder_path, 'wiki.mat')
+    mat = scipy.io.loadmat(meta_file)
+    
     full_path = mat['wiki']['full_path'][0, 0][0]
-    dob = mat['wiki']['dob'][0, 0][0]
-    photo_taken = mat['wiki']['photo_taken'][0, 0][0]
     gender = mat['wiki']['gender'][0, 0][0]
 
     age = []
@@ -54,17 +54,19 @@ def load_WIKI_data(folder_path='data/WIKI'):
 
     for i in range(len(full_path)):
         img_path.append(os.path.join('WIKI', full_path[i][0]))
-        age.append(photo_taken[i] - dob[i])
+        born = full_path[i][0].split('/')[-1].split('_')[1].split('-')[0]
+        taken = full_path[i][0].split('/')[-1].split('_')[-1].split('.')[0]
+        age.append(int(taken) - int(born))
         gender_list.append(gender[i])
 
     df = pd.DataFrame({'age': age, 'gender': gender_list, 'img': img_path})
     return df
 
-def load_IMDB_data(folder_path='data/IMDB'):
-    mat = scipy.io.loadmat(os.path.join(folder_path, 'imdb.mat'))
+def load_and_convert_IMDB_data(folder_path='../data/IMDB'):
+    meta_file = os.path.join(folder_path, 'imdb.mat')
+    mat = scipy.io.loadmat(meta_file)
+    
     full_path = mat['imdb']['full_path'][0, 0][0]
-    dob = mat['imdb']['dob'][0, 0][0]
-    photo_taken = mat['imdb']['photo_taken'][0, 0][0]
     gender = mat['imdb']['gender'][0, 0][0]
 
     age = []
@@ -73,7 +75,9 @@ def load_IMDB_data(folder_path='data/IMDB'):
 
     for i in range(len(full_path)):
         img_path.append(os.path.join('IMDB', full_path[i][0]))
-        age.append(photo_taken[i] - dob[i])
+        born = full_path[i][0].split('_')[2].split('-')[0]
+        taken = full_path[i][0].split('_')[-1].split('.')[0]
+        age.append(int(taken) - int(born))
         gender_list.append(gender[i])
 
     df = pd.DataFrame({'age': age, 'gender': gender_list, 'img': img_path})

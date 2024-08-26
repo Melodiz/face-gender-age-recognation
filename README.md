@@ -32,7 +32,7 @@ The IMDB-WIKI dataset is one of the largest publicly available datasets of face 
   - [Source](https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/)
   - [Kaggle](https://www.kaggle.com/datasets/abhikjha/imdb-wiki-faces-dataset)
 
-To use this dataset, download `imdb_crop.tar` and `wiki_crop.tar`, and place them in `./data/imdb_crop` and `./data/wiki_crop`, respectively.
+To use this dataset, download `imdb_crop.tar` and `wiki_crop.tar`, and place them in `./data/IMDB` and `./data/WIKI`, respectively.
 
 ### Adience Dataset
 
@@ -41,6 +41,10 @@ The Adience dataset contains 26,580 photos across 2,284 subjects with a binary g
 - **Links to Adience**:
   - [Papers with code](https://paperswithcode.com/dataset/adience)
   - [Kaggle](https://www.kaggle.com/datasets/ttungl/adience-benchmark-gender-and-age-classification)
+  
+### Overall
+<img src="demo/age_distibution.jpg" alt="Age Distribution" width="600"/>
+
 
 ## Data Pre-processing
 
@@ -111,3 +115,9 @@ The model is compiled with the following configurations:
 
 [Click](training_results/TRAINIG-RESULTS.md) to see the detailed results.
 
+## Demo Results
+
+<img src="demo/pict1.jpg" alt="Demo Result 1" width="600"/>
+<img src="demo/pict2.jpg" alt="Demo Result 2" width="600"/>
+<img src="demo/pict3.jpg" alt="Demo Result 3" width="600"/>
+<img src="demo/pict4.jpg" alt="Demo Result 4" width="600"/>

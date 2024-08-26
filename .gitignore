@@ -1,8 +1,6 @@
-UTKFace/
-UTKFace archive/
 env/
 TODO.md
-demo/
 data/
 logs/
-showcase.ipynb
+analytics/data_loader.py
+models/
